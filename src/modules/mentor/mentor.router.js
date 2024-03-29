@@ -1,12 +1,12 @@
 import express from 'express';
 import { allowedTo, protectedRoutes } from '../user/user.controller.js';
-import * as mentorController from './mentor.controller.js'
-import { requestChecking } from '../../middleware/req.middleware.js';
-const requestRouter = express.Router();
+import * as controller from './mentor.controller.js'
+import { requestChecking } from '../../middleware/checking.js';
+const mentorRouter = express.Router();
 
-requestRouter.post('/', protectedRoutes, allowedTo('mentor'), requestChecking, mentorController.addPatient)
-requestRouter.delete('/:id', protectedRoutes, allowedTo('mentor'), mentorController.removePatient)
-requestRouter.get('/allPatients', protectedRoutes, mentorController.getPatients)
+mentorRouter.post('/', protectedRoutes, allowedTo('mentor'), requestChecking, controller.addPatient)
+mentorRouter.delete('/:id', protectedRoutes, allowedTo('mentor'), controller.removePatient)
+mentorRouter.get('/allPatients', protectedRoutes, controller.getPatients)
 
 
-export default requestRouter;
+export default mentorRouter;
