@@ -27,9 +27,10 @@ const signUp = catchAsyncError(
 const signIn = catchAsyncError(
     async (req, res, next) => {
         let { email, password } = req.body;
+        console.log(password)
         let user = await userModel.findOne({ email });
         if (!user) return next(new AppError(`invalid email or password`, 404))
-        const match = bcrypt.compare(password, user.password);
+        const match = await bcrypt.compare(password, user.password);
         if (!match) return next(new AppError(`invalid email or password`, 404))
         let token = generateToken({
             _id: user._id,
@@ -163,7 +164,7 @@ const verifyWithCode = catchAsyncError(async (req, res, next) => {
     if (!user) {
         return next(new AppError(`User not found`, 404));
     }
-    if(user.verified === true) {
+    if (user.verified === true) {
         return next(new AppError(`user already verified before`, 404));
     }
     if (!code == user.verificationCode.code || new Date() > user.verificationCode.expireDate) {
@@ -236,7 +237,7 @@ const allowedTo = (...roles) => {
         }
         next()
     })
-} 
+}
 
 export {
     signUp,

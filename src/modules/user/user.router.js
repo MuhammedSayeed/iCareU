@@ -10,8 +10,8 @@ import {
     updatePasswordSchema,
     updateUserSchema,
     verifyResetPasswordCodeSchema,
-} from './user.validation.js';
-import { idSchema } from '../../global/validationSchema.js';
+} from '../../validations/user.js';
+import { idSchema } from '../../validations/global.js';
 
 const userRouter = express.Router();
 

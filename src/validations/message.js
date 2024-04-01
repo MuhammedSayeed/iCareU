@@ -9,8 +9,6 @@ const messageSchema = Joi.object({
         'any.required': 'content of message is required.',
         'string.base': 'content of message must be a string.'
     })
-
-
 });
 
 export{
