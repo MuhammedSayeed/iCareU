@@ -21,13 +21,12 @@ const signUp = catchAsyncError(
         // generate verify token with expiration date 10 minutes
         let token = generateToken({ email: email }, 10)
         sendEmail(email, code, token)
-        res.status(201).json({ message: "success" });
+        res.status(200).json({ message: "success" });
     }
 )
 const signIn = catchAsyncError(
     async (req, res, next) => {
         let { email, password } = req.body;
-        console.log(password)
         let user = await userModel.findOne({ email });
         if (!user) return next(new AppError(`invalid email or password`, 404))
         const match = await bcrypt.compare(password, user.password);
@@ -39,7 +38,7 @@ const signIn = catchAsyncError(
             role: user.role,
             verified: user.verified
         })
-        res.status(201).json({ message: "success", token });
+        res.status(200).json({ message: "success", token });
     }
 )
 const getAllUsers = catchAsyncError(
@@ -121,7 +120,7 @@ const forgotPassword = catchAsyncError(
         result.verificationCode.expireDate = generateExpireDate(2)
         result.save();
         sendEmail(email, code);
-        res.status(201).json({ message: "success", user: { email: result.email } });
+        res.status(200).json({ message: "success", user: { email: result.email } });
 
     }
 )
@@ -200,7 +199,7 @@ const resendCode = catchAsyncError(async (req, res, next) => {
     await user.save();
     // send email with verfication code
     sendEmail(email, code)
-    res.status(201).json({ message: "success" });
+    res.status(200).json({ message: "success" });
 
 })
 const verifyWithToken = catchAsyncError(
