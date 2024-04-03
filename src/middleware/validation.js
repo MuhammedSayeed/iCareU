@@ -1,3 +1,5 @@
+import { AppError } from "../utils/AppError.js";
+
 export const validation = (schema) => {
     return (req, res, next) => {
         let inputs = { ...req.body, ...req.params, ...req.query };
