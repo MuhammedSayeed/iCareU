@@ -6,12 +6,6 @@ const userSchema = new mongoose.Schema({
     password: String,
     passwordChangedAt: Date,
     profilePic: String,
-    
-    gender: {
-        type: String,
-        enum: ['male', 'female'],
-        default: 'male'
-    },
     role: {
         type: String,
         enum: ['mentor', 'patient' , 'admin'],

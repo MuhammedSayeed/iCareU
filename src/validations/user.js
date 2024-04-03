@@ -9,9 +9,7 @@ const signUpSchema = Joi.object({
         'string.email': 'Invalid email format. Please enter a valid email address.',
         'any.required': 'Email is required.'
     }),
-    gender: Joi.string().required().valid('male', 'female').messages({
-        'any.required': 'gender is required.'
-    }),
+
     password: Joi.string().min(6).max(32)
         .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
         .required().messages({
