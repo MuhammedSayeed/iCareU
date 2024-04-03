@@ -4,7 +4,9 @@ export const validation = (schema) => {
         let { error } = schema.validate(inputs, { abortEarly: false })
         if (error) {
             let errors = error.details.map(e => e.message);
-            return res.json({ message: "validation error", errors: errors })
+            return next(new AppError(errors, 404))
+
+            // return res.json({ message: "validation error", errors: errors })
         }
         next()
     }
