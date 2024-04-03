@@ -31,14 +31,15 @@ const signIn = catchAsyncError(
         if (!user) return next(new AppError(`invalid email or password`, 404))
         const match = await bcrypt.compare(password, user.password);
         if (!match) return next(new AppError(`invalid email or password`, 404))
-        let token = generateToken({
+        const userData = {
             _id: user._id,
             name: user.name,
             email: user.email,
             role: user.role,
             verified: user.verified
-        })
-        res.status(200).json({ message: "success", token });
+        }
+        let token = generateToken(userData)
+        res.status(200).json({ message: "success", user : userData , token });
     }
 )
 const getAllUsers = catchAsyncError(
