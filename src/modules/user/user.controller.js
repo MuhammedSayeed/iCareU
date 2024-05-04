@@ -36,11 +36,11 @@ const signIn = catchAsyncError(
             name: user.name,
             email: user.email,
             role: user.role,
-            phone : user.phone,
+            phone: user.phone,
             verified: user.verified
         }
         let token = generateToken(userData)
-        res.status(200).json({ message: "success", user : userData , token });
+        res.status(200).json({ message: "success", user: userData, token });
     }
 )
 const getAllUsers = catchAsyncError(
@@ -77,23 +77,22 @@ const getUser = catchAsyncError(
 )
 const updateUser = catchAsyncError(
     async (req, res, next) => {
-        const { id } = req.params;
         const newData = {
-            name : req.body.name,
-            gender : req.body.gender,
-            phone : req.body.phone
+            name: req.body.name,
+            gender: req.body.gender,
+            phone: req.body.phone
         }
-        let result = await userModel.findByIdAndUpdate(id, newData , { new: true });
+        let result = await userModel.findByIdAndUpdate(req.user._id, newData, { new: true });
         if (!result) return next(new AppError(`user not found`, 404))
-            let token = generateToken({
-                _id: result._id,
-                name: result.name,
-                email: result.email,
-                role: result.role,
-                verified: result.verified,
-                phone : result.phone
-            })
-        res.status(200).json({ message: "success", result: result , token : token });
+        let token = generateToken({
+            _id: result._id,
+            name: result.name,
+            email: result.email,
+            role: result.role,
+            verified: result.verified,
+            phone: result.phone
+        })
+        res.status(200).json({ message: "success", result: result, token: token });
     }
 )
 const updatePassword = catchAsyncError(
@@ -113,7 +112,7 @@ const updatePassword = catchAsyncError(
             email: user.email,
             role: user.role,
             verified: user.verified,
-            phone : user.phone
+            phone: user.phone
         })
         res.status(200).json({ message: "success", result: token });
     }

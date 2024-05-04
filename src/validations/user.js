@@ -51,9 +51,6 @@ const confirmResetPasswordSchema = Joi.object({
     }),
 });
 const updateUserSchema = Joi.object({
-    id: Joi.string().hex().length(24).required().messages({
-        'any.required': 'id is required.'
-    }),
     name: Joi.string().min(2).max(25).required().messages({
         'string.min': 'Name must be at least {#limit} characters long.',
         'string.max': 'Name cannot be longer than {#limit} characters.',
