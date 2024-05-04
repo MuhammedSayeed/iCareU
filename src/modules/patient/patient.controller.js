@@ -8,7 +8,7 @@ const confirmCare = catchAsyncError(
         const { id } = req.params;
         let careReq = await requestModel.findOne({ _id: id, patient: req.user._id });
         if (!careReq) return next(new AppError(`there's something wrong`, 401));
-        if (careReq.status === "accepted" || careReq.status === "rejected") return next(new AppError(`there's something wrong`, 401));
+        if (careReq.status === "accepted" || careReq.status === "rejected") return next(new AppError(`this request is approved or decliend before`, 401));
         // approve care request
         careReq.status = "accepted";
         careReq.save();
@@ -20,8 +20,9 @@ const confirmCare = catchAsyncError(
             return res.json({ message: "success", result: care })
         }
         // first time to care someone
-        let newCare = new careModel({});
-        newCare.mentor = careReq.mentor;
+        let newCare = new careModel({
+            mentor : careReq.mentor
+        });
         newCare.patients.addToSet(careReq.patient);
         newCare.save();
         res.json({ message: "success", result: newCare });
