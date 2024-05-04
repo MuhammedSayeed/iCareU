@@ -84,15 +84,16 @@ const updateUser = catchAsyncError(
         }
         let result = await userModel.findByIdAndUpdate(req.user._id, newData, { new: true });
         if (!result) return next(new AppError(`user not found`, 404))
-        let token = generateToken({
+        const userData = {
             _id: result._id,
             name: result.name,
             email: result.email,
             role: result.role,
-            verified: result.verified,
-            phone: result.phone
-        })
-        res.status(200).json({ message: "success", result: result, token: token });
+            phone: result.phone,
+            verified: result.verified
+        }
+        let token = generateToken(userData)
+        res.status(200).json({ message: "success", user : userData, token: token });
     }
 )
 const updatePassword = catchAsyncError(
