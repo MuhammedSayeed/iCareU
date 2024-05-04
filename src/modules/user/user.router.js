@@ -23,7 +23,7 @@ userRouter.route('/signin').post(validation(signInSchema), controller.signIn)
 
 userRouter.route('/:id').get(controller.protectedRoutes, validation(idSchema), controller.getUser)
     .put(controller.protectedRoutes, validation(updateUserSchema), controller.updateUser)
-    .delete(controller.protectedRoutes, validation(idSchema), controller.deleteUser)
+    .delete(controller.protectedRoutes, controller.allowedTo('admin'), validation(idSchema), controller.deleteUser)
 
 userRouter.route('/update-password').patch(controller.protectedRoutes, validation(updatePasswordSchema), controller.updatePassword)
 

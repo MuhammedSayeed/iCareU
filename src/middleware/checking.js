@@ -1,5 +1,6 @@
 import { careModel } from "../../databases/models/care.model.js";
 import { chatModel } from "../../databases/models/chat.model.js";
+import { requestModel } from "../../databases/models/request.model.js";
 import { AppError } from "../utils/AppError.js";
 import { catchAsyncError } from "./catchAsyncError.js";
 

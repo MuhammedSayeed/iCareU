@@ -9,7 +9,6 @@ const signUpSchema = Joi.object({
         'string.email': 'Invalid email format. Please enter a valid email address.',
         'any.required': 'Email is required.'
     }),
-
     password: Joi.string().min(6).max(32)
         .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
         .required().messages({
@@ -22,7 +21,8 @@ const signUpSchema = Joi.object({
         'any.only': 'Passwords do not match.',
         'any.required': 'repassword is required.'
     }),
-    role: Joi.string().valid('patient', 'mentor', 'admin').required().messages({
+    phone : Joi.string().regex(/^01\d{9}$/).length(11).required() ,
+    role: Joi.string().valid('patient', 'mentor').required().messages({
         'any.only': 'Role must be either "patient" or "mentor".',
         'any.required': 'Role is required.'
     })
@@ -51,6 +51,9 @@ const confirmResetPasswordSchema = Joi.object({
     }),
 });
 const updateUserSchema = Joi.object({
+    id: Joi.string().hex().length(24).required().messages({
+        'any.required': 'id is required.'
+    }),
     name: Joi.string().min(2).max(25).required().messages({
         'string.min': 'Name must be at least {#limit} characters long.',
         'string.max': 'Name cannot be longer than {#limit} characters.',
@@ -58,7 +61,8 @@ const updateUserSchema = Joi.object({
     }),
     gender: Joi.string().required().valid('male', 'female').messages({
         'any.required': 'gender is required.'
-    })
+    }),
+    phone : Joi.string().regex(/^01\d{9}$/).length(11).required()
 });
 const updatePasswordSchema = Joi.object({
     password: Joi.string().min(6).max(32).required().messages({

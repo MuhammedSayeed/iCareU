@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     password: String,
     passwordChangedAt: Date,
     profilePic: String,
+    phone: String,
     role: {
         type: String,
         enum: ['mentor', 'patient' , 'admin'],
@@ -23,6 +24,7 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+
 }, {
     timestamps: true
 })

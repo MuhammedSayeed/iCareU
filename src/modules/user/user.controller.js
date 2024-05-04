@@ -36,6 +36,7 @@ const signIn = catchAsyncError(
             name: user.name,
             email: user.email,
             role: user.role,
+            phone : user.phone,
             verified: user.verified
         }
         let token = generateToken(userData)
@@ -77,9 +78,22 @@ const getUser = catchAsyncError(
 const updateUser = catchAsyncError(
     async (req, res, next) => {
         const { id } = req.params;
-        let result = await userModel.findByIdAndUpdate(id, req.body, { new: true });
+        const newData = {
+            name : req.body.name,
+            gender : req.body.gender,
+            phone : req.body.phone
+        }
+        let result = await userModel.findByIdAndUpdate(id, newData , { new: true });
         if (!result) return next(new AppError(`user not found`, 404))
-        res.status(200).json({ message: "success", result: result });
+            let token = generateToken({
+                _id: result._id,
+                name: result.name,
+                email: result.email,
+                role: result.role,
+                verified: result.verified,
+                phone : result.phone
+            })
+        res.status(200).json({ message: "success", result: result , token : token });
     }
 )
 const updatePassword = catchAsyncError(
@@ -98,7 +112,8 @@ const updatePassword = catchAsyncError(
             name: user.name,
             email: user.email,
             role: user.role,
-            verified: user.verified
+            verified: user.verified,
+            phone : user.phone
         })
         res.status(200).json({ message: "success", result: token });
     }

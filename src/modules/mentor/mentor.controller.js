@@ -6,7 +6,7 @@ import { AppError } from "../../utils/AppError.js";
 
 const addPatient = catchAsyncError(
     async (req, res, next) => {
-        const patient = await userModel.findById({ _id: req.body.id });
+        const patient = await userModel.findById({ _id: req.body.id , role : "patient" });
         if (!patient) return next(new AppError(`patient not found`, 401));
         let result = new requestModel({
             patient: req.body.id,
