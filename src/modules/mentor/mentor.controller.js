@@ -1,3 +1,4 @@
+import { activityModel } from "../../../databases/models/activity.model.js";
 import { careModel } from "../../../databases/models/care.model.js";
 import { requestModel } from "../../../databases/models/request.model.js";
 import { userModel } from "../../../databases/models/user.model.js";
@@ -12,7 +13,7 @@ const addPatient = catchAsyncError(
             patient: req.body.id,
             mentor: req.user._id
         })
-        result.save();
+        await result.save();
         res.json({ message: "success", result: result });
     }
 )
@@ -31,8 +32,19 @@ const getPatients = catchAsyncError(
     }
 )
 
+const getPatientsActivities = catchAsyncError(
+    async (req, res, next) => {
+        const result = await activityModel.find({ mentor : req.user._id }).populate({
+            path : 'patient',
+            select : 'name'
+        })
+        res.json({ message: "success", result: result })
+    }
+)
+
 export {
     addPatient,
     getPatients,
-    removePatient
+    removePatient,
+    getPatientsActivities
 }

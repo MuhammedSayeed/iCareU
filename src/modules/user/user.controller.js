@@ -6,6 +6,7 @@ import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import { AppError } from "../../utils/AppError.js";
 import { generateCode, generateExpireDate, generateToken, clearVerificationCode } from "../../utils/authUtils.js";
 import { ApiFeatures } from '../../utils/ApiFeature.js';
+import { activityModel } from '../../../databases/models/activity.model.js';
 
 const signUp = catchAsyncError(
     async (req, res, next) => {
@@ -18,6 +19,13 @@ const signUp = catchAsyncError(
         result.verificationCode.code = code;
         result.verificationCode.expireDate = generateExpireDate(20)
         await result.save();
+        // if user is patient 
+        if (req.body.role == "patient"){
+            let activity = new activityModel({
+                patient : result._id,
+            })
+            await activity.save();
+        }
         // generate verify token with expiration date 10 minutes
         let token = generateToken({ email: email }, 10)
         sendEmail(email, code, token)
@@ -106,7 +114,7 @@ const updatePassword = catchAsyncError(
         if (!match) return next(new AppError(`invalid password`, 401))
         user.password = newPassword;
         user.passwordChangedAt = passwordChangedAt;
-        user.save();
+        await user.save();
         let token = generateToken({
             _id: user._id,
             name: user.name,
@@ -134,7 +142,7 @@ const forgotPassword = catchAsyncError(
         let code = generateCode();
         result.verificationCode.code = code;
         result.verificationCode.expireDate = generateExpireDate(2)
-        result.save();
+        await result.save();
         sendEmail(email, code);
         res.status(200).json({ message: "success", user: { email: result.email } });
 
@@ -152,7 +160,7 @@ const verifyResetPasswordCode = catchAsyncError(
             _id: user._id
         }, 45)
         clearVerificationCode(user)
-        user.save();
+        await user.save();
         res.status(200).json({ message: "success", token: token })
     }
 )
@@ -225,7 +233,7 @@ const verifyWithToken = catchAsyncError(
             if (err) return next(new AppError({ message: "error in verify token or expired" }, 404));
             let user = await userModel.findOneAndUpdate({ email: decoded.email }, { verified: true }, { new: true });
             clearVerificationCode(user)
-            user.save();
+            await user.save();
             res.status(200).json({ message: "email verified successfully" });
         })
     }

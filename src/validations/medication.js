@@ -21,6 +21,8 @@ const addMedicationSchema = Joi.object({
         'number.base': `"RepeatFor" should be a number`,
         'any.required': `"RepeatFor" is required.`
     }),
+    afterMeal: Joi.boolean(),
+    beforeMeal: Joi.boolean(),
     time: Joi.object({
         hour: Joi.number().min(0).max(23).messages({
             'number.base': 'Hour must be a number.',
@@ -39,9 +41,9 @@ const addMedicationSchema = Joi.object({
 
 });
 const updateMedicationSchema = Joi.object({
-    id : Joi.string().hex().length(24).required().messages({
+    id: Joi.string().hex().length(24).required().messages({
         'any.required': 'Medication id is required.'
-        
+
     }),
     patient: Joi.string().hex().length(24).required().messages({
         'any.required': 'patient is required.',
@@ -67,6 +69,8 @@ const updateMedicationSchema = Joi.object({
         'number.base': `"RepeatFor" should be a number`,
         'any.required': `"RepeatFor" is required.`
     }),
+    afterMeal: Joi.boolean(),
+    beforeMeal: Joi.boolean(),
     time: Joi.object({
         hour: Joi.number().min(0).max(23).messages({
             'number.base': 'Hour must be a number.',
@@ -84,13 +88,13 @@ const updateMedicationSchema = Joi.object({
     })
 });
 const medicationSchema = Joi.object({
-    id : Joi.string().hex().length(24).required().messages({
+    id: Joi.string().hex().length(24).required().messages({
         'any.required': 'id is required.'
-        
+
     }),
 });
 
-export{
+export {
     addMedicationSchema,
     updateMedicationSchema,
     medicationSchema

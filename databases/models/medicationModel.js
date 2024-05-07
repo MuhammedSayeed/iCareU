@@ -19,6 +19,14 @@ const medicationSchema = new mongoose.Schema({
     repeatFor: {
         type: Number,
     },
+    afterMeal: {
+        type: Boolean,
+        default: false
+    },
+    beforeMeal: {
+        type: Boolean,
+        default: false
+    },
     time: {
         hour: {
             type: Number,

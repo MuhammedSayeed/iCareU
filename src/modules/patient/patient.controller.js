@@ -1,3 +1,4 @@
+import { activityModel } from "../../../databases/models/activity.model.js";
 import { careModel } from "../../../databases/models/care.model.js";
 import { requestModel } from "../../../databases/models/request.model.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
@@ -11,12 +12,18 @@ const confirmCare = catchAsyncError(
         if (careReq.status === "accepted" || careReq.status === "rejected") return next(new AppError(`this request is approved or decliend before`, 401));
         // approve care request
         careReq.status = "accepted";
-        careReq.save();
+        await careReq.save();
+        // assgin mentor id to activty of patient
+        const activity = await activityModel.findOne({patient : req.user._id});
+        if (activity) {
+            activity.mentor = careReq.mentor;
+            await activity.save();
+        }
         // check if user already has people to care or first time
         let care = await careModel.findOne({ mentor: careReq.mentor });
         if (care) {
             care.patients.addToSet(careReq.patient);
-            care.save();
+            await care.save();
             return res.json({ message: "success", result: care })
         }
         // first time to care someone
@@ -24,7 +31,7 @@ const confirmCare = catchAsyncError(
             mentor : careReq.mentor
         });
         newCare.patients.addToSet(careReq.patient);
-        newCare.save();
+        await newCare.save();
         res.json({ message: "success", result: newCare });
     }
 )
@@ -35,7 +42,7 @@ const declineCare = catchAsyncError(
         if (!careReq) return next(new AppError(`there's something wrong`, 401));
         if (careReq.status === "pending") {
             careReq.status = "rejected";
-            careReq.save();
+            await careReq.save();
             res.json({ message: "success", result: careReq });
         }
         return next(new AppError(`there's something wrong`, 401));

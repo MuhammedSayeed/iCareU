@@ -6,6 +6,7 @@ const mentorRouter = express.Router();
 
 mentorRouter.post('/', protectedRoutes, allowedTo('mentor'), requestChecking, controller.addPatient)
 mentorRouter.delete('/:id', protectedRoutes, allowedTo('mentor'), controller.removePatient)
+mentorRouter.get('/patients-activities', protectedRoutes, allowedTo('mentor'), controller.getPatientsActivities)
 mentorRouter.get('/allPatients', protectedRoutes, controller.getPatients)
 
 
