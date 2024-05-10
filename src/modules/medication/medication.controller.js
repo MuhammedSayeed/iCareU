@@ -16,7 +16,9 @@ const addMedication = catchAsyncError(
             time: {
                 hour: req.body.hour,
                 minutes: req.body.minutes
-            }
+            },
+            afterMeal: req.body.afterMeal,
+            beforeMeal: req.body.beforeMeal
         })
         await medication.save();
         res.json({ message: "success", result: medication })
@@ -33,7 +35,9 @@ const updateMedication = catchAsyncError(
             time: {
                 hour: req.body.hour,
                 minutes: req.body.minutes
-            }
+            },
+            afterMeal: req.body.afterMeal,
+            beforeMeal: req.body.beforeMeal
         }
         let result = await medicationModel.findByIdAndUpdate(id, updatedMedication, { new: true });
         if (!result) return next(new AppError(`medication not found`, 404))
@@ -51,7 +55,13 @@ const removeMedication = catchAsyncError(
 const getMedication = catchAsyncError(
     async (req, res, next) => {
         const { id } = req.params;
-        let result = await medicationModel.findById(id).populate('patient', 'name id')
+        const { patient } = req.body;
+        const loggedInUser = req.user;
+        const filter = {
+            _id: id,
+            patient: loggedInUser.role === 'mentor' ? patient : loggedInUser._id
+        }
+        let result = await medicationModel.findOne(filter).populate('patient', 'name id')
         if (!result) return next(new AppError(`medication not found`, 404))
         res.status(200).json({ message: "success", result: result });
     }
@@ -59,7 +69,12 @@ const getMedication = catchAsyncError(
 const getAllMedications = catchAsyncError(
     async (req, res, next) => {
         const { patient } = req.params;
-        let result = await medicationModel.find({ patient }).populate('patient', 'name id')
+        const loggedInUser = req.user;
+        const filter = {
+            patient: loggedInUser.role === 'mentor' ? patient : loggedInUser._id
+        }
+
+        let result = await medicationModel.find(filter).populate('patient', 'name id')
         if (!result) return next(new AppError(`patient medication's not found`));
         res.status(200).json({ message: "success", result: result });
     }
