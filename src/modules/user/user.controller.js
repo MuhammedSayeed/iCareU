@@ -22,7 +22,7 @@ const signUp = catchAsyncError(
         // if user is patient 
         if (req.body.role == "patient"){
             let activity = new activityModel({
-                patient : result._id,
+                patient : result._id
             })
             await activity.save();
         }
@@ -240,8 +240,10 @@ const verifyWithToken = catchAsyncError(
 )
 const protectedRoutes = catchAsyncError(async (req, res, next) => {
     let { token } = req.headers;
+    
     if (!token) return next(new AppError(`token is not provided`, 401));
     let decoded = jwt.verify(token, process.env.JWT_KEY)
+    console.log(decoded)
     let user = await userModel.findById(decoded._id);
     if (!user) return next(new AppError(`invalid token`, 404))
     // check if the user has changed his password before
@@ -258,6 +260,7 @@ const allowedTo = (...roles) => {
         if (!roles.includes(req.user.role)) {
             return next(new AppError(`you are not authorized to access this route. you are ${req.user.role}`, 401))
         }
+        console.log("allowed")
         next()
     })
 }

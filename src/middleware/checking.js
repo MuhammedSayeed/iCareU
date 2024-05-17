@@ -11,7 +11,6 @@ export const careRealationshipChecking = (param = false) => {
         async (req, res, next) => {
             let patient;
             const { role } = req.user;
-            console.log(req.user)
             if (param === true) {
                 patient = req.params.patient;
 

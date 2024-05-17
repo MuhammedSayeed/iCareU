@@ -10,6 +10,7 @@ import mentorRouter from './src/modules/mentor/mentor.router.js';
 import chatRouter from './src/modules/chat/chat.router.js';
 import messageRouter from './src/modules/message/message.router.js';
 import cors from "cors"
+import activityRouter from './src/modules/activity/activity.router.js';
 
 dotenv.config()
 const app = express();
@@ -24,6 +25,7 @@ app.use('/api/v1/mentors', mentorRouter)
 app.use('/api/v1/patients', patientRouter)
 app.use('/api/v1/chats', chatRouter)
 app.use('/api/v1/messages', messageRouter)
+app.use('/api/v1/activity', activityRouter)
 
 app.use(globalErrorMiddleware)
 app.all('*', (req, res, next) => {

@@ -1,12 +1,13 @@
 import express from 'express';
-import { protectedRoutes } from '../user/user.controller.js';
+import { allowedTo, protectedRoutes } from '../user/user.controller.js';
 import * as controller from './activity.controller.js'
-import { validation } from '../../middleware/validation.js';
+import { fetchPredictions } from '../../middleware/fetchPredictions.js';
+
 
 const activityRouter = express.Router();
 
-activityRouter.patch('/', protectedRoutes, careRealationshipChecking(), controller.updateActivity)
-activityRouter.get('/user-chats', protectedRoutes, controller.userChats)
+activityRouter.patch('/', protectedRoutes, allowedTo("patient"), fetchPredictions(), controller.updateActivity)
+activityRouter.get('/patients-activities', protectedRoutes, allowedTo("mentor"), controller.getPatientsActivities)
 
 
 export default activityRouter

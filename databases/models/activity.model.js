@@ -11,8 +11,8 @@ const activitySchema = new mongoose.Schema({
     },
     type : {
         type : String,
-        enum: ['Standing', 'Sitting', 'Stairs Down', 'Stairs Up' , 'Walking' , 'Jogging' , 'Running' ,'Jumping' , 'Falling'],
-        default : 'Sitting'
+        enum: ['Falling', 'Up Stairs', 'Jumping', 'Standing', 'Walking', 'Down Stairs', 'Joging', 'Sitting'],
+        default : null
     }
 }, {
     timestamps: true
