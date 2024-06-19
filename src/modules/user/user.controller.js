@@ -19,13 +19,6 @@ const signUp = catchAsyncError(
         result.verificationCode.code = code;
         result.verificationCode.expireDate = generateExpireDate(20)
         await result.save();
-        // if user is patient 
-        if (req.body.role == "patient"){
-            let activity = new activityModel({
-                patient : result._id
-            })
-            await activity.save();
-        }
         // generate verify token with expiration date 10 minutes
         let token = generateToken({ email: email }, 10)
         sendEmail(email, code, token)

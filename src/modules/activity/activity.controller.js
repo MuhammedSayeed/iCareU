@@ -5,10 +5,15 @@ import { AppError } from "../../utils/AppError.js";
 const updateActivity = catchAsyncError(
     async (req, res, next) => {
         const activity = await activityModel.findOneAndUpdate({ patient: req.user._id }, { type: req.activity });
-        if (activity) {
-            return res.json({ message: "activty updated successfully" })
+        if (!activity) {
+            const newActivity = new activityModel({
+                patient : req.user._id,
+                type : req.activity,
+            })
+            await newActivity.save();
         }
-        return new AppError("activity is not found", 404)
+        res.json({ message: "activty updated successfully" })
+
     }
 )
 const getPatientsActivities = catchAsyncError(
@@ -17,7 +22,7 @@ const getPatientsActivities = catchAsyncError(
         if (activities) {
             return res.json({ message: "success" , result : activities })
         }
-        return new AppError("there's something wrong", 404)
+        return new AppError("there's something wrong or there is not activities not recoreded yet", 404)
     }
 )
 

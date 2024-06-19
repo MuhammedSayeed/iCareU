@@ -11,6 +11,7 @@ import chatRouter from './src/modules/chat/chat.router.js';
 import messageRouter from './src/modules/message/message.router.js';
 import cors from "cors"
 import activityRouter from './src/modules/activity/activity.router.js';
+import locationRouter from './src/modules/location/location.router.js';
 
 dotenv.config()
 const app = express();
@@ -26,6 +27,8 @@ app.use('/api/v1/patients', patientRouter)
 app.use('/api/v1/chats', chatRouter)
 app.use('/api/v1/messages', messageRouter)
 app.use('/api/v1/activity', activityRouter)
+app.use('/api/v1/location', locationRouter)
+
 
 app.use(globalErrorMiddleware)
 app.all('*', (req, res, next) => {
@@ -33,5 +36,5 @@ app.all('*', (req, res, next) => {
 })
 app.listen(process.env.PORT || port, () => {
     console.log(`app is listening on ${port}`);
-}) 
+})
 
