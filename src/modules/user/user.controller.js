@@ -6,7 +6,6 @@ import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import { AppError } from "../../utils/AppError.js";
 import { generateCode, generateExpireDate, generateToken, clearVerificationCode } from "../../utils/authUtils.js";
 import { ApiFeatures } from '../../utils/ApiFeature.js';
-import { activityModel } from '../../../databases/models/activity.model.js';
 
 const signUp = catchAsyncError(
     async (req, res, next) => {
