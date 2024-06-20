@@ -14,12 +14,16 @@ dbConnection()
 app.use(cors())
 app.use(express.json())
 init(app);
-const server = app.listen(process.env.PORT || port, () => {
+
+app.listen(process.env.PORT || port, () => {
     console.log(`app is listening on ${port}`);
 })
-const io = new Server(server, {
-    cors: "*"
-})
+// const server = app.listen(process.env.PORT || port, () => {
+//     console.log(`app is listening on ${port}`);
+// })
+// const io = new Server(server, {
+//     cors: "*"
+// })
 
-socketConnection(io);
-cornJob(io);
+// socketConnection(io);
+// cornJob(io);
