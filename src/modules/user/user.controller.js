@@ -6,18 +6,28 @@ import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import { AppError } from "../../utils/AppError.js";
 import { generateCode, generateExpireDate, generateToken, clearVerificationCode } from "../../utils/authUtils.js";
 import { ApiFeatures } from '../../utils/ApiFeature.js';
+import { activityModel } from '../../../databases/models/activity.model.js';
 
 const signUp = catchAsyncError(
     async (req, res, next) => {
         let { email } = req.body;
         let user = await userModel.findOne({ email });
         if (user) return next(new AppError(`email already exists`, 401))
-        let result = new userModel(req.body);
+        let newUser = new userModel(req.body);
+
         // generate Code with expiration date 20 minutes
         let code = generateCode();
-        result.verificationCode.code = code;
-        result.verificationCode.expireDate = generateExpireDate(20)
-        await result.save();
+        newUser.verificationCode.code = code;
+        newUser.verificationCode.expireDate = generateExpireDate(20)
+        await newUser.save();
+
+        // if role is patient add activity to the patient
+        if (newUser.role === "patient") {
+            const newActivity = new activityModel({
+                patient: newUser._id,
+            })
+            await newActivity.save();
+        }
         // generate verify token with expiration date 10 minutes
         let token = generateToken({ email: email }, 10)
         sendEmail(email, code, token)
@@ -93,7 +103,7 @@ const updateUser = catchAsyncError(
             verified: result.verified
         }
         let token = generateToken(userData)
-        res.status(200).json({ message: "success", user : userData, token: token });
+        res.status(200).json({ message: "success", user: userData, token: token });
     }
 )
 const updatePassword = catchAsyncError(
@@ -232,7 +242,7 @@ const verifyWithToken = catchAsyncError(
 )
 const protectedRoutes = catchAsyncError(async (req, res, next) => {
     let { token } = req.headers;
-    
+
     if (!token) return next(new AppError(`token is not provided`, 401));
     let decoded = jwt.verify(token, process.env.JWT_KEY)
     console.log(decoded)

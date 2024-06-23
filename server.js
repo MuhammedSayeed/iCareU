@@ -15,15 +15,13 @@ app.use(cors())
 app.use(express.json())
 init(app);
 
-app.listen(process.env.PORT || port, () => {
+
+const server = app.listen(process.env.PORT || port, () => {
     console.log(`app is listening on ${port}`);
 })
-// const server = app.listen(process.env.PORT || port, () => {
-//     console.log(`app is listening on ${port}`);
-// })
-// const io = new Server(server, {
-//     cors: "*"
-// })
+export const io = new Server(server, {
+    cors: "*"
+})
 
-// socketConnection(io);
-// cornJob(io);
+socketConnection(io);
+cornJob(io); 
