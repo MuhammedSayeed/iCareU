@@ -8,6 +8,7 @@ import messageRouter from "./modules/message/message.router.js"
 import patientRouter from "./modules/patient/patient.router.js"
 import userRouter from "./modules/user/user.router.js"
 import { AppError } from "./utils/AppError.js"
+import express from 'express';
 
 
 export function init(app) {
@@ -20,7 +21,8 @@ export function init(app) {
     app.use('/api/v1/messages', messageRouter)
     app.use('/api/v1/activity', activityRouter)
     app.use('/api/v1/location', locationRouter)
-
+    app.use(express.json({ limit: '50mb' }));
+    app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
     app.use(globalErrorMiddleware)
     app.all('*', (req, res, next) => {
