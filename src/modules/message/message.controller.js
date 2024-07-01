@@ -12,14 +12,14 @@ const sendMessage = catchAsyncError(
         })
         await message.save();
         const result = await message.populate('sender', "_id name email role")
-        res.json({ message: "success", result: result });
+        res.json({ message: "success", results: result });
     }
 )
 const allMessageOfChat = catchAsyncError(
     async (req, res, next) => {
-        const {id} = req.body;
-        let messages = await messageModel.find({chat: id}).populate('sender' , "_id name email")
-        res.json({message : "success" , result : messages});
+        const { id } = req.body;
+        let messages = await messageModel.find({ chat: id }).select("-_id -chat -__v")
+        res.json({ message: "success", results: messages });
     }
 )
 

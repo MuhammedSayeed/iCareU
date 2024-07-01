@@ -8,7 +8,7 @@ const patientRouter = express.Router();
 patientRouter.post('/confirm/:id', protectedRoutes, allowedTo('patient'), validation(idSchema), controller.confirmCare)
 patientRouter.patch('/decline/:id', protectedRoutes, allowedTo('patient'), validation(idSchema), controller.declineCare)
 patientRouter.get('/all-requests', protectedRoutes, allowedTo('patient'), controller.pateintRequests)
-
+patientRouter.get('/get-mentor', protectedRoutes, allowedTo('patient'), controller.getMyMentor)
 
 
 export default patientRouter; 

@@ -1,6 +1,6 @@
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import { chatModel } from '../../../databases/models/chat.model.js'
-import { ApiFeatures } from "../../utils/ApiFeature.js";
+
 
 const createChat = catchAsyncError(
     async (req, res, next) => {
@@ -22,24 +22,8 @@ const createChat = catchAsyncError(
 const userChats = catchAsyncError(
     async (req, res, next) => {
         const { _id } = req.user;
-        const apiFeatures = new ApiFeatures(chatModel, req.query, _id).paginate(10);
-        const chats = await apiFeatures.mongooseQuery.populate("members", "name email _id role");
-        // meta data info
-        let totalUsers = await apiFeatures.totalDocs;
-        let totalPages = Math.ceil(totalUsers / apiFeatures.limit);
-        let meta = {}
-        if (chats.length > 0) {
-            meta = {
-                currentPage: apiFeatures.currentPage,
-                totalPages: totalPages,
-                totalChats: totalUsers
-            }
-        }
-        res.status(200).json({
-            message: "success",
-            meta: meta,
-            result: chats,
-        });
+        const chats = await chatModel.find({ members: { $in: _id } });
+        res.status(200).json({ results: chats })
     }
 )
 

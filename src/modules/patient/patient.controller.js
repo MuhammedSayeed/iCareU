@@ -14,7 +14,7 @@ const confirmCare = catchAsyncError(
         careReq.status = "accepted";
         await careReq.save();
         // assgin mentor id to activty of patient
-        const activity = await activityModel.findOne({patient : req.user._id});
+        const activity = await activityModel.findOne({ patient: req.user._id });
         if (activity) {
             activity.mentor = careReq.mentor;
             await activity.save();
@@ -28,7 +28,7 @@ const confirmCare = catchAsyncError(
         }
         // first time to care someone
         let newCare = new careModel({
-            mentor : careReq.mentor
+            mentor: careReq.mentor
         });
         newCare.patients.addToSet(careReq.patient);
         await newCare.save();
@@ -58,8 +58,15 @@ const pateintRequests = catchAsyncError(
         res.json({ message: "success", result: requests })
     }
 )
+
+const getMyMentor = catchAsyncError(async (req, res, next) => {
+    let care = await careModel.findOne({ patients: { $in: [req.user._id] } }).populate('mentor', '_id email name');
+    if (!care) return next(new AppError(`patient don't have mentor yet`, 401));
+    res.json({ message: "success", result: care.mentor });
+})
 export {
     confirmCare,
     declineCare,
-    pateintRequests
+    pateintRequests,
+    getMyMentor
 }

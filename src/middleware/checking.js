@@ -4,16 +4,16 @@ import { requestModel } from "../../databases/models/request.model.js";
 import { AppError } from "../utils/AppError.js";
 import { catchAsyncError } from "./catchAsyncError.js";
 
-// check if mentor and patient have a care relationship
 
 export const careRealationshipChecking = (param = false) => {
     return catchAsyncError(
         async (req, res, next) => {
             let patient;
             const { role } = req.user;
+
+            console.log("role : ", role);
             if (param === true) {
                 patient = req.params.patient;
-
             } else {
                 patient = req.body.patient;
             }
@@ -25,6 +25,33 @@ export const careRealationshipChecking = (param = false) => {
                 if (result) return next();
             }
             return next(new AppError(`there's something wrong`, 404));
+        }
+    )
+}
+
+export const careRelationCheck = () => {
+    return catchAsyncError(
+        async (req, res, next) => {
+            const { role } = req.user;
+            let patient;
+            let mentor;
+            if (role === 'patient') {
+                patient = req.user._id;
+                mentor = req.body.id;
+            }
+            else if (role === 'mentor') {
+                patient = req.body.id;
+                mentor = req.user._id;
+            } else {
+                return next(new AppError(`you can't perform this action`, 401));
+            }
+            const care = await careModel.findOne({
+                mentor: mentor,
+                patients: { $in: [patient] }
+            }
+            )
+            if (!care) return next(new AppError(`there's something wrong`, 401));
+            next()
         }
     )
 }

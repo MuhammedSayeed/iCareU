@@ -5,14 +5,14 @@ const activitySchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'User'
     },
-    mentor : {
+    mentor: {
         type: mongoose.Types.ObjectId,
         ref: 'User'
     },
-    type : {
-        type : String,
-        enum: ['Falling', 'Up Stairs', 'Jumping', 'Standing', 'Walking', 'Down Stairs', 'Joging', 'Sitting'],
-        default : null
+    type: {
+        type: String,
+        enum: ['Fall', 'Up Stairs', 'Jumping', 'Standing', 'Walking', 'Down Stairs', 'Joging', 'Sitting'],
+        default: null
     }
 }, {
     timestamps: true

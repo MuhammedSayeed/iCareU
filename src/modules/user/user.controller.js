@@ -245,7 +245,6 @@ const protectedRoutes = catchAsyncError(async (req, res, next) => {
 
     if (!token) return next(new AppError(`token is not provided`, 401));
     let decoded = jwt.verify(token, process.env.JWT_KEY)
-    console.log(decoded)
     let user = await userModel.findById(decoded._id);
     if (!user) return next(new AppError(`invalid token`, 404))
     // check if the user has changed his password before
