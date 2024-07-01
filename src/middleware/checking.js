@@ -10,8 +10,6 @@ export const careRealationshipChecking = (param = false) => {
         async (req, res, next) => {
             let patient;
             const { role } = req.user;
-
-            console.log("role : ", role);
             if (param === true) {
                 patient = req.params.patient;
             } else {
@@ -28,7 +26,6 @@ export const careRealationshipChecking = (param = false) => {
         }
     )
 }
-
 export const careRelationCheck = () => {
     return catchAsyncError(
         async (req, res, next) => {
@@ -55,22 +52,11 @@ export const careRelationCheck = () => {
         }
     )
 }
-
 export const requestChecking = catchAsyncError(
     async (req, res, next) => {
         const { id } = req.body;
-        const care = await careModel.findOne({
-            patients: { $in: [id] },
-            mentor: { $ne: req.user._id }
-        }
-        )
-        if (care) return next(new AppError(`you can't add this patient`, 401));
-        const filter = {
-            patient: id,
-            mentor: req.user._id,
-        }
-        const perviousCareReqest = await requestModel.findOne(filter);
-        if (perviousCareReqest) return next(new AppError(`requset sent before`, 401));
+        const prevRequst = await requestModel.findOne({ mentor: req.user._id, patient: id });
+        if (prevRequst) return next(new AppError(`request sent before`, 404));
         next();
     }
 )

@@ -7,6 +7,7 @@ const updateActivity = catchAsyncError(
     async (req, res, next) => {
         const { _id } = req.user;
         const activity = await activityModel.findOneAndUpdate({ patient: _id }, { type: req.activity });
+        console.log(activity);
         if (req.activity === "Fall") {
             io.to(_id.toString()).emit("fallingNotification", {
                 message: "Are you ok?",

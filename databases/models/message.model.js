@@ -14,6 +14,8 @@ const messageSchema = new mongoose.Schema({
         ref: "Chat",
         required: true
     }
+},{
+    timestamps: true,
 })
 
 export const messageModel = mongoose.model('Message', messageSchema);

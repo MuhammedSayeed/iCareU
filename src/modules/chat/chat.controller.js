@@ -22,7 +22,7 @@ const createChat = catchAsyncError(
 const userChats = catchAsyncError(
     async (req, res, next) => {
         const { _id } = req.user;
-        const chats = await chatModel.find({ members: { $in: _id } });
+        const chats = await chatModel.find({ members: { $in: _id } }).populate("members" , "name _id role");
         res.status(200).json({ results: chats })
     }
 )

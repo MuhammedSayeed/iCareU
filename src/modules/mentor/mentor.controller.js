@@ -7,7 +7,7 @@ import { AppError } from "../../utils/AppError.js";
 
 const addPatient = catchAsyncError(
     async (req, res, next) => {
-        const patient = await userModel.findById({ _id: req.body.id , role : "patient" });
+        const patient = await userModel.findById({ _id: req.body.id, role: "patient" });
         if (!patient) return next(new AppError(`patient not found`, 401));
         let result = new requestModel({
             patient: req.body.id,
@@ -34,9 +34,9 @@ const getPatients = catchAsyncError(
 
 const getPatientsActivities = catchAsyncError(
     async (req, res, next) => {
-        const result = await activityModel.find({ mentor : req.user._id }).populate({
-            path : 'patient',
-            select : 'name'
+        const result = await activityModel.find({ mentor: req.user._id }).populate({
+            path: 'patient',
+            select: 'name'
         })
         res.json({ message: "success", result: result })
     }

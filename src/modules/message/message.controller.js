@@ -1,3 +1,4 @@
+import { chatModel } from "../../../databases/models/chat.model.js";
 import { messageModel } from "../../../databases/models/message.model.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 
@@ -11,8 +12,8 @@ const sendMessage = catchAsyncError(
             content: content
         })
         await message.save();
-        const result = await message.populate('sender', "_id name email role")
-        res.json({ message: "success", results: result });
+        await chatModel.findOneAndUpdate({ _id: id }, { lastMesssage: content })
+        res.json({ message: "success" });
     }
 )
 const allMessageOfChat = catchAsyncError(
