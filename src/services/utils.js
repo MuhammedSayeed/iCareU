@@ -4,13 +4,16 @@ export const getUserIdFromSocket = (socket) => {
 
 export const getTime = () => {
     const now = new Date();
-    let currentHour = now.getHours();` `
+    let currentHour = now.getHours();
     const currentMinute = now.getMinutes();
+    const system = currentHour >= 12 ? 'PM' : 'AM';
+
     // Convert to 12-hour format
     currentHour = currentHour % 12;
     currentHour = currentHour ? currentHour : 12; // Convert 0 to 12 for midnight
     return {
         currentHour: currentHour,
-        currentMinute: currentMinute
+        currentMinute: currentMinute,
+        system: system
     }
 }

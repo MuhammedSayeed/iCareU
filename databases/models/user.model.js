@@ -12,10 +12,6 @@ const userSchema = new mongoose.Schema({
         enum: ['mentor', 'patient' , 'admin'],
         default: 'patient'
     },
-    isActive: {
-        type: Boolean,
-        default: false
-    },
     verificationCode: {
         code: { type: String },
         expireDate: { type: Date }

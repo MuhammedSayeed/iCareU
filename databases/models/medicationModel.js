@@ -34,6 +34,11 @@ const medicationSchema = new mongoose.Schema({
         minutes: {
             type: Number,
 
+        },
+        system: {
+            type: String,
+            enum: ["PM", "AM"],
+            default: null
         }
     }
 }, {

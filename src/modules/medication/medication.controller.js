@@ -14,8 +14,9 @@ const addMedication = catchAsyncError(
             dosage: req.body.dosage,
             repeatFor: req.body.repeatFor,
             time: {
-                hour: req.body.hour,
-                minutes: req.body.minutes
+                hour: req.body.time.hour,
+                minutes: req.body.time.minutes,
+                system: req.body.time.system
             },
             afterMeal: req.body.afterMeal,
             beforeMeal: req.body.beforeMeal
@@ -33,8 +34,9 @@ const updateMedication = catchAsyncError(
             dosage: req.body.dosage,
             repeatFor: req.body.repeatFor,
             time: {
-                hour: req.body.hour,
-                minutes: req.body.minutes
+                hour: req.body.time.hour,
+                minutes: req.body.time.minutes,
+                system: req.body.time.system
             },
             afterMeal: req.body.afterMeal,
             beforeMeal: req.body.beforeMeal

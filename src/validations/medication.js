@@ -33,6 +33,11 @@ const addMedicationSchema = Joi.object({
             'number.base': 'Minutes must be a number.',
             'number.min': 'Minutes must be greater than or equal to 0.',
             'number.max': 'Minutes must be less than or equal to 59.'
+        }),
+        system: Joi.string().valid("PM", "AM").required().messages({
+            'any.required': 'The time period is required.',
+            'any.only': 'The time period must be either "AM" or "PM".',
+            'string.base': 'The time period must be a string.'
         })
     }).default({
         hour: 0,
@@ -81,6 +86,11 @@ const updateMedicationSchema = Joi.object({
             'number.base': 'Minutes must be a number.',
             'number.min': 'Minutes must be greater than or equal to 0.',
             'number.max': 'Minutes must be less than or equal to 59.'
+        }),
+        system: Joi.string().valid("PM", "AM").required().messages({
+            'any.required': 'The time period is required.',
+            'any.only': 'The time period must be either "AM" or "PM".',
+            'string.base': 'The time period must be a string.'
         })
     }).default({
         hour: 0,
@@ -90,7 +100,6 @@ const updateMedicationSchema = Joi.object({
 const medicationSchema = Joi.object({
     id: Joi.string().hex().length(24).required().messages({
         'any.required': 'id is required.'
-
     }),
 });
 
