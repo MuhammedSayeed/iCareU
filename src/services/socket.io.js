@@ -14,6 +14,15 @@ export const socketConnection = (io) => {
                 socket.leave(userId);
             })
         }
+        console.log(users);
+
+        socket.on("fallTimeout", (data) => {
+            let patientName = data.patientName;
+            let mentorId = data.mentor;
+            io.to(mentorId).emit("mentorWarning", {
+                message: `${patientName} is not ok`
+            })
+        })
         // send private message 
         socket.on("sendMessage", (data) => {
             const { to, message } = data;

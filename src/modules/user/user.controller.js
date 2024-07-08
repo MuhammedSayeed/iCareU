@@ -14,13 +14,11 @@ const signUp = catchAsyncError(
         let user = await userModel.findOne({ email });
         if (user) return next(new AppError(`email already exists`, 401))
         let newUser = new userModel(req.body);
-
         // generate Code with expiration date 20 minutes
         let code = generateCode();
         newUser.verificationCode.code = code;
         newUser.verificationCode.expireDate = generateExpireDate(20)
         await newUser.save();
-
         // if role is patient add activity to the patient
         if (newUser.role === "patient") {
             const newActivity = new activityModel({
@@ -53,15 +51,27 @@ const signIn = catchAsyncError(
         res.status(200).json({ message: "success", user: userData, token });
     }
 )
+const forgotPassword = catchAsyncError(
+    async (req, res, next) => {
+        const { email } = req.body;
+        let result = await userModel.findOne({ email: email });
+        if (!result) return next(new AppError(`user not found`, 404));
+        let code = generateCode();
+        result.verificationCode.code = code;
+        result.verificationCode.expireDate = generateExpireDate(2)
+        await result.save();
+        sendEmail(email, code);
+        res.status(200).json({ message: "success", user: { email: result.email } });
+
+    }
+)
 const getAllUsers = catchAsyncError(
     async (req, res, next) => {
         let apiFeatures = new
             ApiFeatures(userModel, req.query)
             .paginate(20).fields()
             .sort().search();
-
         let users = await apiFeatures.mongooseQuery;
-
         // meta data info
         let totalUsers = await apiFeatures.totalDocs;
         let totalPages = Math.ceil(totalUsers / apiFeatures.limit);
@@ -136,20 +146,7 @@ const deleteUser = catchAsyncError(
         res.status(200).json({ message: "success" });
     }
 )
-const forgotPassword = catchAsyncError(
-    async (req, res, next) => {
-        const { email } = req.body;
-        let result = await userModel.findOne({ email: email });
-        if (!result) return next(new AppError(`user not found`, 404));
-        let code = generateCode();
-        result.verificationCode.code = code;
-        result.verificationCode.expireDate = generateExpireDate(2)
-        await result.save();
-        sendEmail(email, code);
-        res.status(200).json({ message: "success", user: { email: result.email } });
 
-    }
-)
 const verifyResetPasswordCode = catchAsyncError(
     async (req, res, next) => {
         const { email, code } = req.body;

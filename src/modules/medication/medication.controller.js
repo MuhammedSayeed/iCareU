@@ -25,6 +25,18 @@ const addMedication = catchAsyncError(
         res.json({ message: "success", result: medication })
     }
 )
+const getAllMedications = catchAsyncError(
+    async (req, res, next) => {
+        const { patient } = req.params;
+        const loggedInUser = req.user;
+        const filter = {
+            patient: loggedInUser.role === 'mentor' ? patient : loggedInUser._id
+        }
+        let result = await medicationModel.find(filter).populate('patient', 'name id')
+        if (!result) return next(new AppError(`patient medication's not found`));
+        res.status(200).json({ message: "success", result: result });
+    }
+)
 const updateMedication = catchAsyncError(
     async (req, res, next) => {
         const { id } = req.params;
@@ -65,19 +77,6 @@ const getMedication = catchAsyncError(
         }
         let result = await medicationModel.findOne(filter).populate('patient', 'name id')
         if (!result) return next(new AppError(`medication not found`, 404))
-        res.status(200).json({ message: "success", result: result });
-    }
-)
-const getAllMedications = catchAsyncError(
-    async (req, res, next) => {
-        const { patient } = req.params;
-        const loggedInUser = req.user;
-        const filter = {
-            patient: loggedInUser.role === 'mentor' ? patient : loggedInUser._id
-        }
-
-        let result = await medicationModel.find(filter).populate('patient', 'name id')
-        if (!result) return next(new AppError(`patient medication's not found`));
         res.status(200).json({ message: "success", result: result });
     }
 )
