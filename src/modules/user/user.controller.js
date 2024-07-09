@@ -5,7 +5,6 @@ import { sendEmail } from "../../emails/user.email.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import { AppError } from "../../utils/AppError.js";
 import { generateCode, generateExpireDate, generateToken, clearVerificationCode } from "../../utils/authUtils.js";
-import { ApiFeatures } from '../../utils/ApiFeature.js';
 import { activityModel } from '../../../databases/models/activity.model.js';
 
 const signUp = catchAsyncError(
@@ -65,36 +64,8 @@ const forgotPassword = catchAsyncError(
 
     }
 )
-const getAllUsers = catchAsyncError(
-    async (req, res, next) => {
-        let apiFeatures = new
-            ApiFeatures(userModel, req.query)
-            .paginate(20).fields()
-            .sort().search();
-        let users = await apiFeatures.mongooseQuery;
-        // meta data info
-        let totalUsers = await apiFeatures.totalDocs;
-        let totalPages = Math.ceil(totalUsers / apiFeatures.limit);
 
-        res.status(200).json({
-            message: "success",
-            meta: {
-                currentPage: apiFeatures.currentPage,
-                totalPages: totalPages,
-                totalUsers: totalUsers
-            },
-            result: users,
-        });
-    }
-)
-const getUser = catchAsyncError(
-    async (req, res, next) => {
-        const { id } = req.params;
-        let result = await userModel.findById(id);
-        if (!result) return next(new AppError(`user not found`, 404))
-        res.status(200).json({ message: "success", result: result });
-    }
-)
+
 const updateUser = catchAsyncError(
     async (req, res, next) => {
         const newData = {
@@ -176,7 +147,7 @@ const confirmResetPassword = catchAsyncError(
             role: user.role,
             verified: user.verified
         }, 45)
-        res.json({ message: "success", token })
+        res.status(200).json({ message: "success", token })
     }
 )
 const verifyWithCode = catchAsyncError(async (req, res, next) => {
@@ -258,7 +229,6 @@ const allowedTo = (...roles) => {
         if (!roles.includes(req.user.role)) {
             return next(new AppError(`you are not authorized to access this route. you are ${req.user.role}`, 401))
         }
-        console.log("allowed")
         next()
     })
 }
@@ -266,8 +236,6 @@ const allowedTo = (...roles) => {
 export {
     signUp,
     signIn,
-    getAllUsers,
-    getUser,
     updateUser,
     deleteUser,
     verifyWithToken,

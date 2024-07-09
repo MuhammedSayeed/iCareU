@@ -32,19 +32,10 @@ const getPatients = catchAsyncError(
     }
 )
 
-const getPatientsActivities = catchAsyncError(
-    async (req, res, next) => {
-        const result = await activityModel.find({ mentor: req.user._id }).populate({
-            path: 'patient',
-            select: 'name'
-        })
-        res.json({ message: "success", result: result })
-    }
-)
+
 
 export {
     addPatient,
     getPatients,
-    removePatient,
-    getPatientsActivities
+    removePatient
 }

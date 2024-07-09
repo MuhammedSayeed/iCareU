@@ -15,14 +15,10 @@ import { idSchema } from '../../validations/global.js';
 
 const userRouter = express.Router();
 
-userRouter.route('/').get(controller.getAllUsers)
 
 userRouter.route('/signup').post(validation(signUpSchema), controller.signUp)
 
 userRouter.route('/signin').post(validation(signInSchema), controller.signIn)
-
-userRouter.route('/:id').get(controller.protectedRoutes, validation(idSchema), controller.getUser)
-    .delete(controller.protectedRoutes, controller.allowedTo('admin'), validation(idSchema), controller.deleteUser)
 
 userRouter.route('/update-user').put(controller.protectedRoutes, validation(updateUserSchema), controller.updateUser)
 

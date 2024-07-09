@@ -1,6 +1,6 @@
 export class ApiFeatures {
-    constructor(model, queryString, _id) {
-        this.mongooseQuery = model.find(_id ? { _id } : {});
+    constructor(model, queryString , filter) {
+        this.mongooseQuery = model.find(filter);
         this.queryString = queryString;
         this.model = model;
     }

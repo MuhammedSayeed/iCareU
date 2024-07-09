@@ -97,14 +97,9 @@ const updateMedicationSchema = Joi.object({
         minutes: 0
     })
 });
-const medicationSchema = Joi.object({
-    id: Joi.string().hex().length(24).required().messages({
-        'any.required': 'id is required.'
-    }),
-});
+
 
 export {
     addMedicationSchema,
     updateMedicationSchema,
-    medicationSchema
 }

@@ -22,7 +22,7 @@ const addMedication = catchAsyncError(
             beforeMeal: req.body.beforeMeal
         })
         await medication.save();
-        res.json({ message: "success", result: medication })
+        res.status(200).json({ message: "success", result: medication })
     }
 )
 const getAllMedications = catchAsyncError(

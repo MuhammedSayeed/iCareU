@@ -24,7 +24,7 @@ const confirmCare = catchAsyncError(
         if (care) {
             care.patients.addToSet(careReq.patient);
             await care.save();
-            return res.json({ message: "success", result: care })
+            return res.status(200).json({ message: "success", result: care })
         }
         // first time to care someone
         let newCare = new careModel({
@@ -32,7 +32,7 @@ const confirmCare = catchAsyncError(
         });
         newCare.patients.addToSet(careReq.patient);
         await newCare.save();
-        res.json({ message: "success", result: newCare });
+        res.status(200).json({ message: "success", result: newCare });
     }
 )
 const declineCare = catchAsyncError(
@@ -43,7 +43,7 @@ const declineCare = catchAsyncError(
         if (careReq.status === "pending") {
             careReq.status = "rejected";
             await careReq.save();
-            res.json({ message: "success", result: careReq });
+            res.status(200).json({ message: "success", result: careReq });
         }
         return next(new AppError(`there's something wrong`, 401));
     }
@@ -55,14 +55,14 @@ const pateintRequests = catchAsyncError(
             status: "pending"
         }
         let requests = await requestModel.find(filter).populate('mentor', '_id email name');
-        res.json({ message: "success", result: requests })
+        res.status(200).json({ message: "success", result: requests })
     }
 )
 
 const getMyMentor = catchAsyncError(async (req, res, next) => {
     let care = await careModel.findOne({ patients: { $in: [req.user._id] } }).populate('mentor', '_id email name');
     if (!care) return next(new AppError(`patient don't have mentor yet`, 401));
-    res.json({ message: "success", result: care.mentor });
+    res.status(200).json({ message: "success", result: care.mentor });
 })
 export {
     confirmCare,

@@ -17,4 +17,6 @@ export const sendEmail = async (email, code, token) => {
         html: token ? html.verifyUserHtml(token , code) : html.forgotPasswordHtml(code)
     });
 
+    console.log(info);
+
 }
